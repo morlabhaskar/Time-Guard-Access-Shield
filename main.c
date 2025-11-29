@@ -335,6 +335,7 @@ void eint0_isr(void) __irq{
     VICVectAddr = 0;
     // IOCLR1 = 1<<28;
 }
+
 main(){
     init_system();
     delay_ms(10);
