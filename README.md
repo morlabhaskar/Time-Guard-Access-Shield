@@ -7,7 +7,7 @@ It combines **secure password authentication**, **RTC-based scheduling**, and an
 ## 📸 Project Images
 
 ### Proteus Image
-![Block Diagram](images/proteus_main.png)
+![Block Diagram](images/slider.gif)
 
 ---
 
