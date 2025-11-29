@@ -5,6 +5,10 @@ It combines **secure password authentication**, **RTC-based scheduling**, and an
 
 ---
 
+<img src="images/proteus_main.png" width="300">
+
+---
+
 ## 🚀 Features
 
 ### 🔐 Password Authentication
