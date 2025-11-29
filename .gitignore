@@ -5,8 +5,7 @@
 !*.c
 !*.h
 
-!ARM WEEKLY ONE
-!TIME GUARD MINI PROJECT
+!images
 
 # Allow this .gitignore file itself
 !.gitignore
