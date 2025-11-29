@@ -4,6 +4,10 @@ TimeGuard Access Shield is an embedded access-control system built using the **L
 It combines **secure password authentication**, **RTC-based scheduling**, and an **interrupt-driven configuration menu** to ensure that only authorized users can operate a device — and only at allowed times.
 
 ---
+## 📸 Project Images
+
+### Block Diagram
+![Block Diagram](images/proteus_main.png)
 
 <img src="images/proteus_main.png" width="500">
 
