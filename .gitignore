@@ -5,7 +5,8 @@
 !*.c
 !*.h
 
-!images
+!images/
+!images/**
 
 # Allow this .gitignore file itself
 !.gitignore
