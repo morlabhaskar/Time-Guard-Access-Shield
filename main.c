@@ -573,9 +573,9 @@ main(){
     //         CmdLCD(CLEAR_LCD);
     //         CharLCD(key1);
     //         delay_ms(500);
-    //     }while(key1!=100);
+    //     }while(key1!='/');
     //     // CmdLCD(CLEAR_LCD);
-    //     if(key1=='C'){
+    //     if(key1=='/'){
     //         entry();
     //     }
     //     while(1){
