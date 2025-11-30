@@ -18,7 +18,7 @@
 // #define EINT0_STATUS_LED 16
 
 u8 password[] = "1234",pass[10],repass[10];
-s32 hour=3,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp;
+s32 hour=1,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp;
 s32 EnHr=2,EnMin=0,ExHr=8,ExMin=0;
 u32 key,i;
 
@@ -35,7 +35,7 @@ void display_title(){
     StrLCD("TIME GUARD");
     CmdLCD(GOTO_LINE2_POS0);
     StrLCD(" ACCESS SHIELD  ");
-    delay_ms(500);
+    delay_ms(1500);
     CmdLCD(CLEAR_LCD);
 }
 
@@ -537,7 +537,7 @@ void eint0_isr(void) __irq{
 main(){
     init_system();
     delay_ms(10);
-    IODIR0 &= ~(1<<ENTRY_SW);
+    // IODIR0 &= ~(1<<ENTRY_SW);
 
     //cfg p0.1 pin as EINT0 input pin
     CfgPortPinFunc(0,1,EINT0_PIN_0_1);
@@ -551,7 +551,6 @@ main(){
 	SetRTCTimeInfo(hour,min,sec);
 	SetRTCDateInfo(date,month,year);
 	SetRTCDay(day);
-    
     while(1){
         do{
             display_title();
@@ -565,6 +564,26 @@ main(){
             display_RTC();
         }
     }
+    // while(1){
+    //     do{
+    //         display_title();
+    //         display_RTC();
+    //         key1=KeyScan();
+    //         while(ColScan()==0);
+    //         CmdLCD(CLEAR_LCD);
+    //         CharLCD(key1);
+    //         delay_ms(500);
+    //     }while(key1!=100);
+    //     // CmdLCD(CLEAR_LCD);
+    //     if(key1=='C'){
+    //         entry();
+    //     }
+    //     while(1){
+    //         display_RTC();
+    //     }
+    // }
+
+
 }
 
 
