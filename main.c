@@ -19,7 +19,8 @@
 
 
 u8 password[] = "1234",pass[10],repass[10];
-s32 hour=2,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp,EnHr=2,EnMin=0,ExHr=8,ExMin=0;
+s32 hour=1,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp;
+s32 EnHr=2,EnMin=0,ExHr=8,ExMin=0;
 u32 key,i;
 
 cu8 UserCGRAM[8][8] = {
@@ -56,8 +57,14 @@ void display_RTC(){
 	    DisplayRTCDay(day);
     }
 }
-
+u32 check_working_hours(){
+    if((EnHr<hour)&&(ExHr>hour)){
+        return 1;
+    }
+    return 0;
+}
 u32 check_password(){
+    
     i = 0;
     memset(pass, 0, sizeof(pass));
     BuildCGRAM((u8 *)UserCGRAM[0], 8);
@@ -112,34 +119,34 @@ void change_time(){
     s32 var;
     do{
         CmdLCD(CLEAR_LCD);
-    StrLCD("SET HOURS (0-23)");
-    for(temp=0;temp<2;temp++){
-        key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
-    }
-    str[temp] = '\0'; 
-    var=my_atoi(str);
+        StrLCD("SET HOURS (0-23)");
+        for(temp=0;temp<2;temp++){
+            key=KeyScan();
+            str[temp]=key;
+            CmdLCD(GOTO_LINE2_POS0+temp);
+            CharLCD(key);
+            delay_ms(200);
+            while(ColScan()==0);
+        }
+        str[temp] = '\0'; 
+        var=my_atoi(str);
     }while(var<-1 || var>23);
     hour=var;
     var=0;
 
     do{
         CmdLCD(CLEAR_LCD);
-    StrLCD("SET MIN (0-59)");
-    for(temp=0;temp<2;temp++){
-        key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
-    }
-    str[temp] = '\0'; 
-    var=my_atoi(str);
+        StrLCD("SET MIN (0-59)");
+        for(temp=0;temp<2;temp++){
+            key=KeyScan();
+            str[temp]=key;
+            CmdLCD(GOTO_LINE2_POS0+temp);
+            CharLCD(key);
+            delay_ms(200);
+            while(ColScan()==0);
+        }
+        str[temp] = '\0'; 
+        var=my_atoi(str);
     }while(var<-1 || var>59);
     min=var;
     var=0;
@@ -228,8 +235,6 @@ void change_password(){
             StrLCD("PASSWORD CHANGED");
             delay_ms(2000);
             CmdLCD(CLEAR_LCD);
-            // IOCLR0 = 1<<25;
-            // IOSET0 = 1<<26;
         }
         else{
             CmdLCD(GOTO_LINE1_POS0);
@@ -309,15 +314,95 @@ void change_date(){
     CmdLCD(CLEAR_LCD);
 }
 
+void change_working_hours(){
+    u8 str[4];
+    CmdLCD(CLEAR_LCD);
+    StrLCD("ENTR ETRY HRS  ");
+    for(temp=0;temp<2;temp++){
+        key=KeyScan();
+        str[temp]=key;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        CharLCD(key);
+        delay_ms(200);
+        while(ColScan()==0);
+    }
+    str[temp] = '\0'; 
+    EnHr=my_atoi(str);
+
+    CmdLCD(CLEAR_LCD);
+    StrLCD("ENTR ETRY MIN  ");
+    for(temp=0;temp<2;temp++){
+        key=KeyScan();
+        str[temp]=key;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        CharLCD(key);
+        delay_ms(200);
+        while(ColScan()==0);
+    }
+    str[temp] = '\0'; 
+
+    temp=my_atoi(str);
+    EnMin=temp;
+
+    CmdLCD(CLEAR_LCD);
+    StrLCD("EXT ETRY HRS  ");
+    for(temp=0;temp<2;temp++){
+        key=KeyScan();
+        str[temp]=key;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        CharLCD(key);
+        delay_ms(200);
+        while(ColScan()==0);
+    }
+    str[temp] = '\0'; 
+    ExHr=my_atoi(str);
+
+    CmdLCD(CLEAR_LCD);
+    StrLCD("ENTR ETRY MIN  ");
+    for(temp=0;temp<2;temp++){
+        key=KeyScan();
+        str[temp]=key;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        CharLCD(key);
+        delay_ms(200);
+        while(ColScan()==0);
+    }
+    str[temp] = '\0'; 
+    ExMin=my_atoi(str);
+    CmdLCD(CLEAR_LCD);
+    StrLCD("EMP WORKING  ");
+    CmdLCD(GOTO_LINE2_POS0);
+    StrLCD("HOURS UPDATED");
+    delay_ms(1000);
+    CmdLCD(CLEAR_LCD);
+    
+}
+
 void open_menu(){
     int flag;
-    CmdLCD(GOTO_LINE1_POS0);
-    StrLCD("1:CDATE 2:CTIME");
-    CmdLCD(GOTO_LINE2_POS0);
-    StrLCD("3:CPWD 4:EXIT");
-    key=KeyScan();
+
+    key = -1;
+
+CmdLCD(CLEAR_LCD);
+CmdLCD(GOTO_LINE1_POS0);
+StrLCD("           1:CHANGE DATE 2:CHANGE TIME 3:CHANGE PASSWORD");
+CmdLCD(GOTO_LINE2_POS0);
+StrLCD("           4:CHANGE EMPLOYEE WORKING HOURS   5:EXIT     ");
+
+while(key == -1)
+{
+    CmdLCD(0x18);         // scroll left one char
+    delay_ms(150);
+
+    key = KeyScan_NonBlocking();  // NON BLOCKING
+}
+
+key=KeyScan();
+while(ColScan()==0);
+
+
+
     CmdLCD(CLEAR_LCD);
-    while(ColScan()==0);
     switch(key){
         case '1':
             change_date();
@@ -343,7 +428,12 @@ void open_menu(){
             if(flag==1){
                 change_password();
             }
-            break;  
+            break; 
+        case '4':
+            change_working_hours();
+            break;
+        case '5':
+            break;
         default:
             break; 
     }
