@@ -281,17 +281,17 @@ void change_date(){
     while(ColScan()==0);
     day=key-'0';
     // CharLCD(key);
-    // delay_ms(500);
+    delay_ms(500);
     SetRTCDateInfo(date,month,year);
     SetRTCDay(day);
     CmdLCD(CLEAR_LCD);
     // delay_ms(500);
     // CharLCD('A');
     // CmdLCD(CLEAR_LCD);
-    // StrLCD("DATE UPDATED");
+    StrLCD("DATE UPDATED");
 
-    // delay_ms(500);
-    // CmdLCD(CLEAR_LCD);
+    delay_ms(500);
+    CmdLCD(CLEAR_LCD);
     // return;
     
 }

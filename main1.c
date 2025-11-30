@@ -19,7 +19,7 @@
 
 
 u8 password[] = "1234",pass[10],repass[10];
-s32 hour,min,sec,date,month,year,day,is_login,temp;
+s32 hour=2,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp,EnHr=2,EnMin=0,ExHr=8,ExMin=0;
 u32 key,i;
 
 cu8 UserCGRAM[8][8] = {
@@ -57,7 +57,7 @@ void display_RTC(){
     }
 }
 
-u32 chack_password(){
+u32 check_password(){
     i = 0;
     memset(pass, 0, sizeof(pass));
     BuildCGRAM((u8 *)UserCGRAM[0], 8);
@@ -95,6 +95,7 @@ u32 chack_password(){
         StrLCD("WAIT 2 SECONDS     ");
         is_login=1;
         delay_ms(2000);
+        CmdLCD(CLEAR_LCD);
         // IOCLR0 = 1<<25;
         // IOSET0 = 1<<26;
         return 1;
@@ -113,7 +114,7 @@ u32 chack_password(){
 void change_time(){
     u8 str[4];
     CmdLCD(CLEAR_LCD);
-    StrLCD("SET HOURS");
+    StrLCD("SET HOURS (0-23)");
     for(temp=0;temp<2;temp++){
         key=KeyScan();
         str[temp]=key;
@@ -126,7 +127,7 @@ void change_time(){
     hour=my_atoi(str);
 
     CmdLCD(CLEAR_LCD);
-    StrLCD("SET MUNUTES");
+    StrLCD("SET MIN (0-59)");
     for(temp=0;temp<2;temp++){
         key=KeyScan();
         str[temp]=key;
@@ -139,7 +140,7 @@ void change_time(){
     min=my_atoi(str);
 
     CmdLCD(CLEAR_LCD);
-    StrLCD("SET SECONDS");
+    StrLCD("SET SEC (0-59)");
     for(temp=0;temp<2;temp++){
         key=KeyScan();
         str[temp]=key;
@@ -153,63 +154,6 @@ void change_time(){
 
     SetRTCTimeInfo(hour,min,sec);
     CmdLCD(CLEAR_LCD);
-}
-
-void change_date(){
-    u8 str[4];
-    CmdLCD(CLEAR_LCD);
-    StrLCD("SET DATE");
-    for(temp=0;temp<2;temp++){
-        key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
-    }
-    str[temp] = '\0'; 
-    date=my_atoi(str);
-
-    CmdLCD(CLEAR_LCD);
-    StrLCD("SET MONTH");
-    for(temp=0;temp<2;temp++){
-        key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
-    }
-    str[temp] = '\0'; 
-    month=my_atoi(str);
-
-    CmdLCD(CLEAR_LCD);
-    StrLCD("SET YEAR");
-    for(temp=0;temp<4;temp++){
-        key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
-    }
-    str[temp] = '\0'; 
-    year=my_atoi(str);
-
-    CmdLCD(CLEAR_LCD);
-    StrLCD("0:S 1:M 2:T 3:W");
-    CmdLCD(GOTO_LINE2_POS0);
-    StrLCD("4:T 5:F 6:S");
-    delay_ms(200);
-    key=KeyScan();
-    while(ColScan()==0);
-    day=key-'0';
-    SetRTCDateInfo(date,month,year);
-    SetRTCDay(day);
-    StrLCD("DATE UPDATED");
-    delay_ms(1000);
-    CmdLCD(CLEAR_LCD);
-    
 }
 void change_password(){
     i = 0;
@@ -270,8 +214,6 @@ void change_password(){
         if (strcmp(pass, repass) == 0){
             strcpy(password, pass);
             CmdLCD(GOTO_LINE1_POS0);
-            StrLCD("CONGRATULATIONS ");
-            CmdLCD(GOTO_LINE2_POS0);
             StrLCD("PASSWORD CHANGED");
             delay_ms(2000);
             CmdLCD(CLEAR_LCD);
@@ -289,28 +231,109 @@ void change_password(){
     }
         
 }
-void open_menu(){
-    CmdLCD(GOTO_LINE1_POS0);
-    StrLCD("1:CPWD 2:CTIME");
+void change_date(){
+    u8 str[4];
+    CmdLCD(CLEAR_LCD);
+    StrLCD("SET DATE (1-31)");
+    for(temp=0;temp<2;temp++){
+        key=KeyScan();
+        str[temp]=key;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        CharLCD(key);
+        delay_ms(200);
+        while(ColScan()==0);
+    }
+    str[temp] = '\0'; 
+    date=my_atoi(str);
+
+    CmdLCD(CLEAR_LCD);
+    StrLCD("SET MONTH (1-12)");
+    for(temp=0;temp<2;temp++){
+        key=KeyScan();
+        str[temp]=key;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        CharLCD(key);
+        delay_ms(200);
+        while(ColScan()==0);
+    }
+    str[temp] = '\0'; 
+    month=my_atoi(str);
+
+    CmdLCD(CLEAR_LCD);
+    StrLCD("SET YEAR");
+    for(temp=0;temp<4;temp++){
+        key=KeyScan();
+        str[temp]=key;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        CharLCD(key);
+        delay_ms(200);
+        while(ColScan()==0);
+    }
+    str[temp] = '\0'; 
+    year=my_atoi(str);
+
+    CmdLCD(CLEAR_LCD);
+    StrLCD("0:S 1:M 2:T 3:W");
     CmdLCD(GOTO_LINE2_POS0);
-    StrLCD("3:CDATE 4:EXIT");
-    
+    StrLCD("4:T 5:F 6:S");
+    delay_ms(200);
     key=KeyScan();
     while(ColScan()==0);
+    day=key-'0';
+    // CharLCD(key);
+    // delay_ms(500);
+    SetRTCDateInfo(date,month,year);
+    SetRTCDay(day);
     CmdLCD(CLEAR_LCD);
+    // delay_ms(500);
+    // CharLCD('A');
+    // CmdLCD(CLEAR_LCD);
+    // StrLCD("DATE UPDATED");
+
+    // delay_ms(500);
+    // CmdLCD(CLEAR_LCD);
+    // return;
+    
+}
+
+void open_menu(){
+    int flag;
+    CmdLCD(GOTO_LINE1_POS0);
+    StrLCD("1:CDATE 2:CTIME");
+    CmdLCD(GOTO_LINE2_POS0);
+    StrLCD("3:CPWD 4:EXIT");
+    
+    key=KeyScan();
+    
+    CmdLCD(CLEAR_LCD);
+    while(ColScan()==0);
     switch(key){
         case '1':
-            change_password();
+            change_date();
             break;   
         case '2':
             change_time();
             break;   
         case '3':
-            change_date();
+            if(is_login==1){
+                change_password();
+            }else{
+                flag=1;
+                StrLCD("NOT AUTHORIZED");
+                CmdLCD(GOTO_LINE2_POS0);
+                StrLCD("   LOGIN FIRST   ");
+                delay_ms(1000);
+                CmdLCD(CLEAR_LCD);
+                check_password();
+            }
+            if(flag==1){
+                change_password();
+            }
             break;  
         default:
             break; 
     }
+    
 }
 void eint0_isr(void) __irq{
     // IOSET1 = 1<<28;
@@ -344,10 +367,6 @@ main(){
     // IODIR0 &= ~((1<<ENTRY_SW) | (1<<EINT_SW));
     IODIR0 &= ~(1<<ENTRY_SW);
 
-    // IODIR0 |= 1<<25;
-    // IODIR0 |= 1<<26;
-    // IODIR1 |= 1<<28;
-
     //cfg p0.1 pin as EINT0 input pin
     CfgPortPinFunc(0,1,EINT0_PIN_0_1);
     VICIntEnable = 1<<EINT0_VIC_CHNO;
@@ -357,11 +376,11 @@ main(){
     EXTPOLAR = 0;      // Falling edge
 
     // Set the initial time (hours, minutes, seconds)
-	SetRTCTimeInfo(00,00,00);
-	SetRTCDateInfo(30,11,2025);
-	SetRTCDay(4);
+	SetRTCTimeInfo(hour,min,sec);
+	SetRTCDateInfo(date,month,year);
+	SetRTCDay(day);
     // IOSET0 = 1<<25;
-
+    
     while(1){
         do{
             display_title();
@@ -372,7 +391,7 @@ main(){
         if(digitalRead(ENTRY_SW)==0){
             u32 count=0,fail=0,status;
             while(count<3){
-                status = chack_password();
+                status = check_password();
                 if(status==1){
                     break;
                 }
@@ -395,9 +414,9 @@ main(){
                 StrLCD("  LOGIN FAILED  ");
             }
         }
-        while(1){
+        /*while(1){
             CmdLCD(CLEAR_LCD);
             display_RTC();
-        }
+        }*/
     }
 }
