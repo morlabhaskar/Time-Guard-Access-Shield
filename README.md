@@ -133,7 +133,7 @@ Continuously updates:
 
 ## 🛠 Build & Flash
 
-Use **Keil uVision**, **Arm-GCC**, FlashMagic, JTAG, or OpenOCD.
+Use **Keil uVision**, **Arm-GCC**, FlashMagic.
 
 ---
 
