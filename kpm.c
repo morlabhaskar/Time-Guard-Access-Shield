@@ -57,7 +57,7 @@ int KeyScan_NonBlocking(void)
 {
     int r, c, keyV;
 
-    Init_KPM();   // same as your blocking function
+    Init_KPM();
 
     // NO KEY PRESS (col lines are high)
     if (ColScan() == 1)

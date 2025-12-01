@@ -18,24 +18,25 @@
 // #define EINT0_STATUS_LED 16
 
 u8 password[] = "1234",pass[10],repass[10];
-s32 hour=1,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp;
+s32 hour=3,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp;
 s32 EnHr=2,EnMin=0,ExHr=8,ExMin=0;
 u32 key,i;
 
+cu8 EyeLUT[] = {0x00,0x0A,0x15,0x11,0x11,0x0E,0x00,0x00};
 cu8 LockLUT[]={0x0E,0x11,0x11,0x1F,0x1B,0x1B,0x1F,0x00};
 cu8 SuccessLUT[]={0x01,0x03,0x16,0x1C,0x08,0x00,0x00,0x00};
 cu8 WarningLUT[]={0x04,0x0E,0x0E,0x04,0x00,0x04,0x00,0x00};
 cu8 ClockLUT[]={0x0E,0x11,0x15,0x15,0x11,0x0E,0x00,0x00};
 
 void display_title(){
-    BuildCGRAM((u8*)ClockLUT,8);
+    BuildCGRAM((u8*)LockLUT,8);
     CmdLCD(GOTO_LINE1_POS0+1);
     CharLCD(0);
     CmdLCD(GOTO_LINE1_POS0+3);
     StrLCD("TIME GUARD");
     CmdLCD(GOTO_LINE2_POS0);
     StrLCD(" ACCESS SHIELD  ");
-    delay_ms(1500);
+    delay_ms(2000);
     CmdLCD(CLEAR_LCD);
 }
 
@@ -54,7 +55,7 @@ void display_RTC(){
     }
 }
 u32 check_working_hours(){
-    s32 cHour=HOUR,cMin=MIN;
+    s32 cHour=hour,cMin=min;
     if((EnHr<=cHour)&&(ExHr>=hour)){
         return 1;
     }
@@ -62,6 +63,7 @@ u32 check_working_hours(){
 }
 
 u32 check_password(){
+    int visible = 0,j; 
     CmdLCD(CLEAR_LCD);
     i = 0;
     memset(pass, 0, sizeof(pass));
@@ -70,21 +72,44 @@ u32 check_password(){
     CharLCD(0);
     CmdLCD(GOTO_LINE1_POS0 + 2);
     StrLCD("ENTER PASSWORD");
-    CmdLCD(GOTO_LINE2_POS0 + 5);
+    BuildCGRAM((u8*)EyeLUT,8);
+    CmdLCD(GOTO_LINE2_POS0 + 11);
+    CharLCD(0);
+    
+    CmdLCD(GOTO_LINE2_POS0 + 12);
+    StrLCD("SHOW");
+    CmdLCD(GOTO_LINE2_POS0 + 2);
     while(i<4){
         key = KeyScan();
+
+        if(key == '+'){
+            visible = !visible;
+            CmdLCD(GOTO_LINE2_POS0 + 2);
+            for(j = 0; j < i; j++){
+                if(visible)
+                    CharLCD(pass[j]);
+                else
+                    CharLCD('*'); 
+            }
+            CmdLCD(GOTO_LINE2_POS0 + 2 + i);
+            // while(ColScan()==0);
+            continue;
+        }
+
         if(key >= '0' && key <= '9'){
             pass[i] = key;
-            // CharLCD(key);
-            CharLCD('*');
+            if (visible)
+                CharLCD(key); 
+            else
+                CharLCD('*');
             i++;
         }
         else if(key == 'C'){
             i--;
             pass[i]='\0';
-            CmdLCD(GOTO_LINE2_POS0+5+i);
+            CmdLCD(GOTO_LINE2_POS0+2+i);
             CharLCD(' ');
-            CmdLCD(GOTO_LINE2_POS0+5+i);
+            CmdLCD(GOTO_LINE2_POS0+2+i);
         }
         pass[i]='\0';
         while(ColScan()==0);
@@ -302,7 +327,7 @@ void change_password(){
         }
     }     
     CmdLCD(CLEAR_LCD);
-    StrLCD("    ");
+    StrLCD("                      ");
 }
 
 void change_date(){
@@ -459,6 +484,8 @@ void open_menu(){
     key=KeyScan();
     while(ColScan()==0);
     CmdLCD(CLEAR_LCD);
+    CmdLCD(GOTO_LINE1_POS0);
+    StrLCD("                         ");
     switch(key){
         case '1':
             change_date();
@@ -467,7 +494,7 @@ void open_menu(){
             change_time();
             break;   
         case '3':
-            if((is_login==1)){
+            if(is_login==1){
                 change_password();
             }
             else{
@@ -500,6 +527,7 @@ void open_menu(){
                     StrLCD("  EXCEEDED");
                     delay_ms(1000);
                     CmdLCD(CLEAR_LCD);
+                    StrLCD("                  ");
                 }
             }
             break; 
@@ -520,6 +548,7 @@ void eint0_isr(void) __irq{
     StrLCD("   TO PRESS 1   "); 
     key=KeyScan();
     while(ColScan()==0);
+    CmdLCD(CLEAR_LCD);
     switch(key){
         case '1':
             open_menu();
