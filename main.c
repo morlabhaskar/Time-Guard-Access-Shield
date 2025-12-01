@@ -15,6 +15,7 @@
 
 #define EINT0_PIN_0_1 3
 #define EINT0_VIC_CHNO 14
+// #define EINT0_STATUS_LED 16
 
 u8 password[] = "1234",pass[10],repass[10];
 s32 hour=3,min=0,sec=0,date=28,month=11,year=2025,day=5,is_login,temp;
