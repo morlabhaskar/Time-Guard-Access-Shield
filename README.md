@@ -129,12 +129,5 @@ Flash using: - FlashMagic (UART Bootloader)\
 
 ------------------------------------------------------------------------
 
-## 🙌 Credits
-
-Developed by **Bhaskar Nani**\
-*Embedded Systems \| ARM7 \| RTC \| Keypad Interfaces*
-
-------------------------------------------------------------------------
-
 ## 🏁 Conclusion
 TimeGuard Access Shield ensures **secure, reliable, and time-restricted** machine operation — ideal for labs, workshops, and industrial environments.
