@@ -53,24 +53,3 @@ u32 KeyScan(void){
     keyV = kpmLUT[r][c];
     return keyV;
 }
-int KeyScan_NonBlocking(void)
-{
-    int r, c, keyV;
-
-    Init_KPM();
-
-    // NO KEY PRESS (col lines are high)
-    if (ColScan() == 1)
-        return -1;
-
-    // Identify row
-    r = RowCheck();
-
-    // Identify column
-    c = ColCheck();
-
-    // Map key value
-    keyV = kpmLUT[r][c];
-
-    return keyV;
-}

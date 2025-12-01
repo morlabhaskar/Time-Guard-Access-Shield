@@ -73,26 +73,34 @@ u32 check_password(){
     CmdLCD(GOTO_LINE1_POS0 + 2);
     StrLCD("ENTER PASSWORD");
     BuildCGRAM((u8*)EyeLUT,8);
-    CmdLCD(GOTO_LINE2_POS0 + 11);
-    CharLCD(0);
     
-    CmdLCD(GOTO_LINE2_POS0 + 12);
-    StrLCD("SHOW");
-    CmdLCD(GOTO_LINE2_POS0 + 2);
-    while(i<4){
-        key = KeyScan();
 
+    while(i<4){
+        if((visible==0) && (i!=0)){
+            CmdLCD(GOTO_LINE2_POS0 + 11);
+            CharLCD(0);
+            CmdLCD(GOTO_LINE2_POS0 + 12);
+            StrLCD("SHOW");
+        }
+        else if((visible==1) && (i!=0)){
+            CmdLCD(GOTO_LINE2_POS0 + 11);
+            CharLCD(0);
+            CmdLCD(GOTO_LINE2_POS0 + 12);
+            StrLCD("HIDE");
+        }
+        CmdLCD(GOTO_LINE2_POS0 + i);
+        key = KeyScan();
         if(key == '+'){
+            while(ColScan()==0);
             visible = !visible;
-            CmdLCD(GOTO_LINE2_POS0 + 2);
+            CmdLCD(GOTO_LINE2_POS0);
             for(j = 0; j < i; j++){
                 if(visible)
                     CharLCD(pass[j]);
                 else
                     CharLCD('*'); 
             }
-            CmdLCD(GOTO_LINE2_POS0 + 2 + i);
-            // while(ColScan()==0);
+            CmdLCD(GOTO_LINE2_POS0 + i);
             continue;
         }
 
@@ -104,16 +112,16 @@ u32 check_password(){
                 CharLCD('*');
             i++;
         }
-        else if(key == 'C'){
+        else if((key == 'C')&&(i>0)){
             i--;
             pass[i]='\0';
-            CmdLCD(GOTO_LINE2_POS0+2+i);
+            CmdLCD(GOTO_LINE2_POS0+i);
             CharLCD(' ');
-            CmdLCD(GOTO_LINE2_POS0+2+i);
+            CmdLCD(GOTO_LINE2_POS0+i);
         }
-        pass[i]='\0';
         while(ColScan()==0);
     }
+    pass[i]='\0';
     if(strcmp(password,pass)==0){
         CmdLCD(CLEAR_LCD);
         BuildCGRAM((u8 *)SuccessLUT, 8);
@@ -185,15 +193,25 @@ void change_time(){
         CharLCD(0);
         CmdLCD(GOTO_LINE1_POS0+2);
         StrLCD("SET HOURS-HH");
-        for(temp=0;temp<2;temp++){
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
             key=KeyScan();
-            str[temp]=key;
-            CmdLCD(GOTO_LINE2_POS0+temp);
-            CharLCD(key);
-            delay_ms(200);
-            while(ColScan()==0);
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
-        str[temp] = '\0'; 
+        str[temp] = '\0';
         var=my_atoi(str);
     }while(var<-1 || var>23);
     hour=var;
@@ -204,13 +222,23 @@ void change_time(){
         CharLCD(0);
         CmdLCD(GOTO_LINE1_POS0+2);
         StrLCD("SET MINUTES-MM");
-        for(temp=0;temp<2;temp++){
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
             key=KeyScan();
-            str[temp]=key;
-            CmdLCD(GOTO_LINE2_POS0+temp);
-            CharLCD(key);
-            delay_ms(200);
-            while(ColScan()==0);
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
         str[temp] = '\0'; 
         var=my_atoi(str);
@@ -223,24 +251,33 @@ void change_time(){
         CharLCD(0);
         CmdLCD(GOTO_LINE1_POS0+2);
         StrLCD("SET SECONDS-SS");
-        for(temp=0;temp<2;temp++){
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
             key=KeyScan();
-            str[temp]=key;
-            CmdLCD(GOTO_LINE2_POS0+temp);
-            CharLCD(key);
-            delay_ms(200);
-            while(ColScan()==0);
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
         str[temp] = '\0'; 
-        var=my_atoi(str);
+        var=my_atoi(str); 
     }while(var<-1 || var>59);
     sec=var;
     SetRTCTimeInfo(hour,min,sec);
     CmdLCD(CLEAR_LCD);
     StrLCD("TIME UPDATED");
-    delay_ms(500);
     CmdLCD(CLEAR_LCD);
-    StrLCD("   ");
+    StrLCD("                ");
 }
 void change_password(){
     i = 0;
@@ -336,13 +373,23 @@ void change_date(){
     do{
         CmdLCD(CLEAR_LCD);
         StrLCD("SET DATE - DD");
-        for(temp=0;temp<2;temp++){
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
             key=KeyScan();
-            str[temp]=key;
-            CmdLCD(GOTO_LINE2_POS0+temp);
-            CharLCD(key);
-            delay_ms(200);
-            while(ColScan()==0);
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
         str[temp] = '\0'; 
         var=my_atoi(str);
@@ -352,30 +399,50 @@ void change_date(){
     do{
         CmdLCD(CLEAR_LCD);
         StrLCD("SET MONTH - MM");
-        for(temp=0;temp<2;temp++){
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
             key=KeyScan();
-            str[temp]=key;
-            CmdLCD(GOTO_LINE2_POS0+temp);
-            CharLCD(key);
-            delay_ms(200);
-            while(ColScan()==0);
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
-        str[temp] = '\0'; 
+        str[temp] = '\0';  
         var=my_atoi(str);
     }while(var<1 || var>12);
     month=var;
     var=0;
     CmdLCD(CLEAR_LCD);
     StrLCD("SET YEAR - YYYY");
-    for(temp=0;temp<4;temp++){
+    temp=0;
+    CmdLCD(GOTO_LINE2_POS0+temp);
+    while(temp<4){
         key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
+        if (key >= '0' && key <= '9'){
+            CharLCD(key);
+            str[temp]=key;
+            temp++;
+        }
+        else if ((key == 'C')&&(temp>0)){
+            temp--;
+            str[temp] = '\0';
+            CmdLCD(GOTO_LINE2_POS0 + temp);
+            CharLCD(' ');
+            CmdLCD(GOTO_LINE2_POS0  + temp);
+        }
+        while (ColScan() == 0);
     }
-    str[temp] = '\0'; 
+    str[temp] = '\0';         
     year=my_atoi(str);
     do{
         CmdLCD(CLEAR_LCD);
@@ -387,7 +454,6 @@ void change_date(){
         while(ColScan()==0);
         day=key-'0';
     }while(day<0 || day>6);
-    delay_ms(500);
     SetRTCDateInfo(date,month,year);
     SetRTCDay(day);
     CmdLCD(CLEAR_LCD);
@@ -398,33 +464,53 @@ void change_date(){
     StrLCD("DATE UPDATED");
     delay_ms(500);
     CmdLCD(CLEAR_LCD);
-    StrLCD("   ");
+    StrLCD("                 ");
 }
 
 void change_working_hours(){
     u8 str[4];
     CmdLCD(CLEAR_LCD);
     StrLCD("ENTR ETRY HRS-HH");
-    for(temp=0;temp<2;temp++){
+    temp=0;
+    CmdLCD(GOTO_LINE2_POS0+temp);
+    while(temp<2){
         key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
+        if (key >= '0' && key <= '9'){
+            CharLCD(key);
+            str[temp]=key;
+            temp++;
+        }
+        else if ((key == 'C')&&(temp>0)){
+            temp--;
+            str[temp] = '\0';
+            CmdLCD(GOTO_LINE2_POS0 + temp);
+            CharLCD(' ');
+            CmdLCD(GOTO_LINE2_POS0  + temp);
+        }
+        while (ColScan() == 0);
     }
     str[temp] = '\0'; 
     EnHr=my_atoi(str);
 
     CmdLCD(CLEAR_LCD);
     StrLCD("ENTR ETRY MIN-MM ");
-    for(temp=0;temp<2;temp++){
+    temp=0;
+    CmdLCD(GOTO_LINE2_POS0+temp);
+    while(temp<2){
         key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
+        if (key >= '0' && key <= '9'){
+            CharLCD(key);
+            str[temp]=key;
+            temp++;
+        }
+        else if ((key == 'C')&&(temp>0)){
+            temp--;
+            str[temp] = '\0';
+            CmdLCD(GOTO_LINE2_POS0 + temp);
+            CharLCD(' ');
+            CmdLCD(GOTO_LINE2_POS0  + temp);
+        }
+        while (ColScan() == 0);
     }
     str[temp] = '\0'; 
     temp=my_atoi(str);
@@ -432,29 +518,50 @@ void change_working_hours(){
 
     CmdLCD(CLEAR_LCD);
     StrLCD("EXT ETRY HRS-HH");
-    for(temp=0;temp<2;temp++){
+    temp=0;
+    CmdLCD(GOTO_LINE2_POS0+temp);
+    while(temp<2){
         key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
+        if (key >= '0' && key <= '9'){
+            CharLCD(key);
+            str[temp]=key;
+            temp++;
+        }
+        else if ((key == 'C')&&(temp>0)){
+            temp--;
+            str[temp] = '\0';
+            CmdLCD(GOTO_LINE2_POS0 + temp);
+            CharLCD(' ');
+            CmdLCD(GOTO_LINE2_POS0  + temp);
+        }
+        while (ColScan() == 0);
     }
-    str[temp] = '\0'; 
+    str[temp] = '\0';  
     ExHr=my_atoi(str);
 
     CmdLCD(CLEAR_LCD);
     StrLCD("ENTR ETRY MIN-MM");
-    for(temp=0;temp<2;temp++){
+    temp=0;
+    CmdLCD(GOTO_LINE2_POS0+temp);
+    while(temp<2){
         key=KeyScan();
-        str[temp]=key;
-        CmdLCD(GOTO_LINE2_POS0+temp);
-        CharLCD(key);
-        delay_ms(200);
-        while(ColScan()==0);
+        if (key >= '0' && key <= '9'){
+            CharLCD(key);
+            str[temp]=key;
+            temp++;
+        }
+        else if ((key == 'C')&&(temp>0)){
+            temp--;
+            str[temp] = '\0';
+            CmdLCD(GOTO_LINE2_POS0 + temp);
+            CharLCD(' ');
+            CmdLCD(GOTO_LINE2_POS0  + temp);
+        }
+        while (ColScan() == 0);
     }
     str[temp] = '\0'; 
     ExMin=my_atoi(str);
+
     CmdLCD(CLEAR_LCD);
     BuildCGRAM((u8*)SuccessLUT,8);
     CmdLCD(GOTO_LINE1_POS0);
@@ -473,14 +580,9 @@ void open_menu(){
     key = -1;
     CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
-    StrLCD("1:CHANGE DATE 2:CHANGE TIME 3:CHANGE PASSWORD");
+    StrLCD("1:CHD 2:CHT 3:CP");
     CmdLCD(GOTO_LINE2_POS0);
-    StrLCD("4:CHANGE EMPLOYEE WORKING HOURS   5:EXIT     ");
-    while(key == -1){
-        CmdLCD(0x18); 
-        delay_ms(300);
-        key = KeyScan_NonBlocking();  // NON BLOCKING
-    }
+    StrLCD("4:CEWH 5:EXIT     ");
     key=KeyScan();
     while(ColScan()==0);
     CmdLCD(CLEAR_LCD);
@@ -518,6 +620,11 @@ void open_menu(){
                     change_password();
                 }
                 else{
+                    CmdLCD(CLEAR_LCD);
+                    CmdLCD(GOTO_LINE1_POS0);
+                    StrLCD("                  ");
+                    CmdLCD(GOTO_LINE2_POS0);
+                    StrLCD("                  ");
                     BuildCGRAM((u8 *)ClockLUT, 8);
                     CmdLCD(GOTO_LINE1_POS0);
                     CharLCD(0);
@@ -527,7 +634,6 @@ void open_menu(){
                     StrLCD("  EXCEEDED");
                     delay_ms(1000);
                     CmdLCD(CLEAR_LCD);
-                    StrLCD("                  ");
                 }
             }
             break; 
@@ -542,6 +648,7 @@ void open_menu(){
 }
 
 void eint0_isr(void) __irq{
+    CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
     StrLCD("   SHOW MENU   ");
     CmdLCD(GOTO_LINE2_POS0);
@@ -576,23 +683,47 @@ main(){
     EXTMODE  = 1<<0;   // Edge trigger
     EXTPOLAR = 0;      // Falling edge
 
-    // Set the initial time (hours, minutes, seconds)
 	SetRTCTimeInfo(hour,min,sec);
 	SetRTCDateInfo(date,month,year);
 	SetRTCDay(day);
+    // while(1){
+    //     do{
+    //         display_title();
+    //         display_RTC();
+    //     }while(digitalRead(ENTRY_SW));
+    //     CmdLCD(CLEAR_LCD);
+    //     if(digitalRead(ENTRY_SW)==0){
+    //         entry();
+    //     }
+    //     while(1){
+    //         display_RTC();
+    //     }
+    // }
     while(1){
-        do{
-            display_title();
-            display_RTC();
-        }while(digitalRead(ENTRY_SW));
-        CmdLCD(CLEAR_LCD);
+        // do{
+        //     display_title();
+        //     display_RTC();
+        // }while(digitalRead(ENTRY_SW));
+        // CmdLCD(CLEAR_LCD);
+        display_RTC();
         if(digitalRead(ENTRY_SW)==0){
             entry();
         }
-        while(1){
-            display_RTC();
-        }
+        // while(1){
+        //     display_RTC();
+        // }
     }
+
+    // while(1){
+    //     display_RTC();
+    //     if(ColScan()==0){
+    //         key=KeyScan();
+    //         while(ColScan()==0);
+    //         if(key=='/'){
+    //             entry();
+    //         }
+    //     }
+    // }
     // while(1){
     //     do{
     //         display_title();
