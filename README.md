@@ -11,77 +11,130 @@ It combines **secure password authentication**, **RTC-based scheduling**, and an
 
 ---
 
-## 🚀 Features
+## 🔐 Features
 
-### 🔐 Password Authentication
-- 4-digit password entry through a 4×4 keypad  
-- Masked input (`*`)  
-- Password change with confirmation  
-- Incorrect password lockout  
+-   🕒 **Real-Time Clock Display** (Time, Date, Day)\
+-   🔑 **Password-Based Authentication** (Changeable Password)\
+-   🚪 **Entry Access Only in Working Hours**\
+-   ⚙️ **Admin Menu via EINT0 Interrupt**
+    -   Change Date\
+    -   Change Time\
+    -   Change Password\
+    -   Change Working Hours\
+-   ⚡ **Edge-Triggered EINT0 Interrupt Handling**
+-   🎨 LCD Custom Characters (Lock, Success, Warning, Clock Icons)
+-   ❌ Blocks login after 3 failed attempts\
+-   📟 Full RTC configuration and live display
 
-### ⏱️ RTC Functions
-- Displays **time, date, and day**  
-- Editable hour, minute, second, date, month, year, weekday  
-- Leap-year–based validation  
-
-### 🕒 Time-Based Machine Control
-- Device ON only in allowed time window  
-- Compares RTC with programmed ON/OFF times  
-
-### 🎛️ Interrupt-Driven Menu (EINT0)
-- Edit RTC  
-- Change password  
-- Edit allowed device timings  
-- Exit and return to main display  
-
----
+------------------------------------------------------------------------
 
 ## 🧩 Hardware Requirements
-- LPC2148  
-- 16×2 LCD  
-- 4×4 Matrix Keypad  
-- LED / Relay / Device  
-- Push-button (Interrupt)  
-- USB–UART Converter / DB9 Cable  
 
----
+-   **LPC2129 / LPC2148 or any LPC21xx**
+-   **16x2 LCD (HD44780)**
+-   **4x4 Matrix Keypad**
+-   **External Interrupt Switch (EINT0)**
+-   **RTC Module (DS1307 or compatible)**
+-   **Power Supply 5V**
+-   **Connection Wires & Breadboard/PCB**
 
-## 🛠 Software Requirements
-- Embedded C  
-- Keil / VS Code ARM toolchain  
-- Flash Magic  
+------------------------------------------------------------------------
 
----
+## 📁 Project Structure
 
-## 📚 Project Workflow
-1. System initializes RTC, LCD, keypad, interrupts  
-2. RTC shown continuously  
-3. ENTRY switch → Password verification  
-4. If valid and time matches → Device ON  
-5. EINT0 interrupt → Settings menu  
-6. Edit RTC / password / ON-OFF time  
-7. Exit and return to normal operation  
+    /project
+    │-- main.c
+    │-- lcd.c / lcd.h
+    │-- rtc.c / rtc.h
+    │-- kpm.c / kpm.h (Keypad Driver)
+    │-- system_init.c
+    │-- delay.c / delay.h
+    │-- arduino.c (digitalRead wrapper)
+    │-- pin_connect_block.h
+    │-- types.h
 
----
+------------------------------------------------------------------------
 
-## 🔧 RTC Edit Options
+## ⚙️ Key Functionalities
+
+### 1️⃣ **Login Authentication**
+
+-   Accepts a 4-digit password\
+-   Displays `*` for each digit\
+-   Supports backspace using `C` key\
+-   Allows only **3 attempts**, then locks system
+
+------------------------------------------------------------------------
+
+### 2️⃣ **Working Hours Check**
+
+System allows entry **only between configured Entry & Exit hours**:
+
+``` c
+if((EnHr <= cHour) && (ExHr >= cHour)) return 1;
 ```
-1. Hour      5. Date
-2. Minute    6. Month
-3. Second    7. Year
-4. Day       8. Exit
-```
 
----
+------------------------------------------------------------------------
 
-## 📁 Repository Structure
-```
-/src
-/include
-README.md
-```
+### 3️⃣ **Admin Menu (Triggered by EINT0 Interrupt)**
 
----
+Press external interrupt switch → LCD prompts to press `1` for menu.
+
+Menu options:
+
+    1 – Change Date
+    2 – Change Time
+    3 – Change Password
+    4 – Employee Working Hours
+    5 – Exit
+
+------------------------------------------------------------------------
+
+### 4️⃣ **RTC Setup & Display**
+
+Live updating of: - Time (HH:MM:SS) - Date (DD/MM/YYYY) - Day (SUN--SAT)
+
+------------------------------------------------------------------------
+
+## 🚀 How to Use
+
+### ▶️ **Startup**
+
+-   System shows title screen\
+-   Then continuous RTC display\
+-   Press **ENTRY switch** → Login window
+
+### ▶️ **Admin Control**
+
+-   Press **EINT0 switch**\
+-   Press **1** to open the menu
+
+------------------------------------------------------------------------
+
+## 🛠️ Build & Flash
+
+Compile using **Keil uVision** or **Arm-GCC**.\
+Flash using: - FlashMagic (UART Bootloader)\
+- OpenOCD\
+- JTAG Programmer
+
+------------------------------------------------------------------------
+
+## 📸 LCD Icons (CGRAM)
+
+-   Lock icon\
+-   Success tick\
+-   Warning sign\
+-   Clock symbol
+
+------------------------------------------------------------------------
+
+## 🙌 Credits
+
+Developed by **Bhaskar Nani**\
+*Embedded Systems \| ARM7 \| RTC \| Keypad Interfaces*
+
+------------------------------------------------------------------------
 
 ## 🏁 Conclusion
 TimeGuard Access Shield ensures **secure, reliable, and time-restricted** machine operation — ideal for labs, workshops, and industrial environments.
