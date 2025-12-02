@@ -748,7 +748,7 @@ main(){
 	SetRTCTimeInfo(hour,min,sec);
 	SetRTCDateInfo(date,month,year);
 	SetRTCDay(day);
-
+    display_title();
     while(1){
         display_RTC();
         if(ColScan()==0){
