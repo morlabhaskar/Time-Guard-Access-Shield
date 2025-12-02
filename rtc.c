@@ -133,3 +133,4 @@ Day of Week to set (0=Sunday, ..., 6=Saturday)
 void SetRTCDay(u32 day){
 	DOW = day;
 }
+

@@ -16,4 +16,6 @@ void GetRTCDay(s32 *);
 void DisplayRTCDay(u32);
 void SetRTCDay(u32);
 
+
+
 #endif

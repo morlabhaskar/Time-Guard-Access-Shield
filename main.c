@@ -36,7 +36,7 @@ void display_title(){
     StrLCD("TIME GUARD");
     CmdLCD(GOTO_LINE2_POS0);
     StrLCD(" ACCESS SHIELD  ");
-    delay_ms(2000);
+    delay_ms(1500);
     CmdLCD(CLEAR_LCD);
 }
 
@@ -51,7 +51,7 @@ void display_RTC(){
 	    DisplayRTCDay(day);
 }
 u32 check_working_hours(){
-    s32 cHour=hour,cMin=min;
+    s32 cHour=hour;
     if((EnHr<=cHour)&&(ExHr>=hour)){
         return 1;
     }
@@ -125,9 +125,12 @@ u32 check_password(){
         CharLCD(0);
         CmdLCD(GOTO_LINE1_POS0 + 2);
         StrLCD("LOGIN SUCCESS   ");
+        IOCLR0 = 1<<2;
+        IOSET0 = 1<<25;
         is_login=1;
         delay_ms(2000);
         CmdLCD(CLEAR_LCD);
+        
         return 1;
     }
     else{
@@ -710,6 +713,7 @@ void open_menu(){
 }
 
 void eint0_isr(void) __irq{
+    IOSET0 = 1<<26;
     CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
     StrLCD("   SHOW MENU   ");
@@ -725,6 +729,7 @@ void eint0_isr(void) __irq{
         default:
             break;
     }
+    IOCLR0 |= 1<<26;
     //eint0 isr user activity ends
     //clear EINT0 status in External Interrupt Peripheral 
     EXTINT = 1<<0;
@@ -736,6 +741,11 @@ main(){
     init_system();
     delay_ms(10);
     // IODIR0 &= ~(1<<ENTRY_SW);
+    IODIR0 |= 1<<26;
+    IODIR0 |= 1<<25;
+    IODIR0 |= 1<<2;
+
+    IOSET0 = 1<<2;
 
     //cfg p0.1 pin as EINT0 input pin
     CfgPortPinFunc(0,1,EINT0_PIN_0_1);
@@ -749,6 +759,7 @@ main(){
 	SetRTCDateInfo(date,month,year);
 	SetRTCDay(day);
     display_title();
+    
     while(1){
         display_RTC();
         if(ColScan()==0){
