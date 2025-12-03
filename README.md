@@ -4,12 +4,25 @@ TimeGuard Access Shield is an embedded access-control system built using the **L
 It combines **secure password authentication**, **RTC-based scheduling**, and an **interrupt-driven configuration menu** to ensure that only authorized users can operate a device — and only at allowed times.
 
 ---
-## 📸 Project Images
 
-### Proteus Image
-![Block Diagram](images/slider.gif)
+## Badges
+![MCU-LPC2148](https://img.shields.io/badge/MCU-LPC2148-blue)
+![ARM-Architecture](https://img.shields.io/badge/Architecture-ARM7--TDMI-green)
+![Keypad-4x4](https://img.shields.io/badge/Keypad-4x4%20Matrix-orange)
+![LCD-16x2](https://img.shields.io/badge/LCD-16x2-yellowgreen)
+![RTC](https://img.shields.io/badge/RTC-DS1307-lightblue)
+![Interrupts](https://img.shields.io/badge/Interrupts-EINT0%20%7C%20EINT1-red)
+![LED-Control](https://img.shields.io/badge/LED-Control-yellow)
+![Embedded-C](https://img.shields.io/badge/Language-Embedded%20C-blueviolet)
+![Keil](https://img.shields.io/badge/IDE-Keil%20uVision-blue)
+![VSCode](https://img.shields.io/badge/Editor-VS%20Code-blue)
+![GCC](https://img.shields.io/badge/Compiler-GCC-brightgreen)
+![Platform-ARM](https://img.shields.io/badge/Platform-ARM%20Embedded-lightgrey)
+![Real-Time](https://img.shields.io/badge/Category-Real%20Time%20Application-red)
 
----
+## 🎥 Demo Video
+
+[![Video](images/thumbnail.png)](images/video.mp4)
 
 ## 🔐 Features
 

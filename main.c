@@ -41,14 +41,14 @@ void display_title(){
 }
 
 void display_RTC(){
-	    GetRTCTimeInfo(&hour,&min,&sec);
-	    DisplayRTCTime(hour,min,sec);
+	GetRTCTimeInfo(&hour,&min,&sec);
+	DisplayRTCTime(hour,min,sec);
 
-	    GetRTCDateInfo(&date,&month,&year);
-	    DisplayRTCDate(date,month,year);
+	GetRTCDateInfo(&date,&month,&year);
+	DisplayRTCDate(date,month,year);
 
-	    GetRTCDay(&day);
-	    DisplayRTCDay(day);
+	GetRTCDay(&day);
+	DisplayRTCDay(day);
 }
 u32 check_working_hours(){
     s32 cHour=hour;
@@ -273,6 +273,7 @@ void change_time(){
     SetRTCTimeInfo(hour,min,sec);
     CmdLCD(CLEAR_LCD);
     StrLCD("TIME UPDATED");
+    delay_ms(1000);
     CmdLCD(CLEAR_LCD);
     StrLCD("                ");
 }
