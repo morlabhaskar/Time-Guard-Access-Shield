@@ -538,27 +538,6 @@ void change_working_hours(){
         return;
     }
     CmdLCD(CLEAR_LCD);
-    
-    // temp=0;
-    // CmdLCD(GOTO_LINE2_POS0+temp);
-    // while(temp<2){
-    //     key=KeyScan();
-    //     if (key >= '0' && key <= '9'){
-    //         CharLCD(key);
-    //         str[temp]=key;
-    //         temp++;
-    //     }
-    //     else if ((key == 'C')&&(temp>0)){
-    //         temp--;
-    //         str[temp] = '\0';
-    //         CmdLCD(GOTO_LINE2_POS0 + temp);
-    //         CharLCD(' ');
-    //         CmdLCD(GOTO_LINE2_POS0  + temp);
-    //     }
-    //     while (ColScan() == 0);
-    // }
-    // str[temp] = '\0'; 
-    // EnHr=my_atoi(str);
     do{
         CmdLCD(CLEAR_LCD);
         CmdLCD(GOTO_LINE1_POS0);
@@ -588,34 +567,12 @@ void change_working_hours(){
     }while(var<-1 || var>23);
     EnHr=var;
 
-    // StrLCD("ENTR ETRY MIN-MM ");
-    // temp=0;
-    // CmdLCD(GOTO_LINE2_POS0+temp);
-    // while(temp<2){
-    //     key=KeyScan();
-    //     if (key >= '0' && key <= '9'){
-    //         CharLCD(key);
-    //         str[temp]=key;
-    //         temp++;
-    //     }
-    //     else if ((key == 'C')&&(temp>0)){
-    //         temp--;
-    //         str[temp] = '\0';
-    //         CmdLCD(GOTO_LINE2_POS0 + temp);
-    //         CharLCD(' ');
-    //         CmdLCD(GOTO_LINE2_POS0  + temp);
-    //     }
-    //     while (ColScan() == 0);
-    // }
-    // str[temp] = '\0'; 
-    // temp=my_atoi(str);
-    // EnMin=temp;
     do{
         CmdLCD(CLEAR_LCD);
         CmdLCD(GOTO_LINE1_POS0);
         CharLCD(0);
         CmdLCD(GOTO_LINE1_POS0+2);
-        StrLCD("SET ENTY MIN-HH");
+        StrLCD("SET ENTY MIN-MM");
         temp=0;
         CmdLCD(GOTO_LINE2_POS0+temp);
         while(temp<2){
