@@ -527,9 +527,10 @@ void change_date(){
 }
 
 void change_working_hours(){
-    int status;
+    int status,var;
     u8 str[4];
     status=check_password();
+    BuildCGRAM((u8*)ClockLUT,8);
     if(status==0){
         CmdLCD(CLEAR_LCD);
         CmdLCD(GOTO_LINE1_POS0);
@@ -537,97 +538,164 @@ void change_working_hours(){
         return;
     }
     CmdLCD(CLEAR_LCD);
-    StrLCD("ENTR ETRY HRS-HH");
-    temp=0;
-    CmdLCD(GOTO_LINE2_POS0+temp);
-    while(temp<2){
-        key=KeyScan();
-        if (key >= '0' && key <= '9'){
-            CharLCD(key);
-            str[temp]=key;
-            temp++;
+    
+    // temp=0;
+    // CmdLCD(GOTO_LINE2_POS0+temp);
+    // while(temp<2){
+    //     key=KeyScan();
+    //     if (key >= '0' && key <= '9'){
+    //         CharLCD(key);
+    //         str[temp]=key;
+    //         temp++;
+    //     }
+    //     else if ((key == 'C')&&(temp>0)){
+    //         temp--;
+    //         str[temp] = '\0';
+    //         CmdLCD(GOTO_LINE2_POS0 + temp);
+    //         CharLCD(' ');
+    //         CmdLCD(GOTO_LINE2_POS0  + temp);
+    //     }
+    //     while (ColScan() == 0);
+    // }
+    // str[temp] = '\0'; 
+    // EnHr=my_atoi(str);
+    do{
+        CmdLCD(CLEAR_LCD);
+        CmdLCD(GOTO_LINE1_POS0);
+        CharLCD(0);
+        CmdLCD(GOTO_LINE1_POS0+2);
+        StrLCD("SET ENTY HOURS-HH");
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
+            key=KeyScan();
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
-        else if ((key == 'C')&&(temp>0)){
-            temp--;
-            str[temp] = '\0';
-            CmdLCD(GOTO_LINE2_POS0 + temp);
-            CharLCD(' ');
-            CmdLCD(GOTO_LINE2_POS0  + temp);
-        }
-        while (ColScan() == 0);
-    }
-    str[temp] = '\0'; 
-    EnHr=my_atoi(str);
+        str[temp] = '\0';
+        var=my_atoi(str);
+    }while(var<-1 || var>23);
+    EnHr=var;
 
-    CmdLCD(CLEAR_LCD);
-    StrLCD("ENTR ETRY MIN-MM ");
-    temp=0;
-    CmdLCD(GOTO_LINE2_POS0+temp);
-    while(temp<2){
-        key=KeyScan();
-        if (key >= '0' && key <= '9'){
-            CharLCD(key);
-            str[temp]=key;
-            temp++;
+    // StrLCD("ENTR ETRY MIN-MM ");
+    // temp=0;
+    // CmdLCD(GOTO_LINE2_POS0+temp);
+    // while(temp<2){
+    //     key=KeyScan();
+    //     if (key >= '0' && key <= '9'){
+    //         CharLCD(key);
+    //         str[temp]=key;
+    //         temp++;
+    //     }
+    //     else if ((key == 'C')&&(temp>0)){
+    //         temp--;
+    //         str[temp] = '\0';
+    //         CmdLCD(GOTO_LINE2_POS0 + temp);
+    //         CharLCD(' ');
+    //         CmdLCD(GOTO_LINE2_POS0  + temp);
+    //     }
+    //     while (ColScan() == 0);
+    // }
+    // str[temp] = '\0'; 
+    // temp=my_atoi(str);
+    // EnMin=temp;
+    do{
+        CmdLCD(CLEAR_LCD);
+        CmdLCD(GOTO_LINE1_POS0);
+        CharLCD(0);
+        CmdLCD(GOTO_LINE1_POS0+2);
+        StrLCD("SET ENTY MIN-HH");
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
+            key=KeyScan();
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
-        else if ((key == 'C')&&(temp>0)){
-            temp--;
-            str[temp] = '\0';
-            CmdLCD(GOTO_LINE2_POS0 + temp);
-            CharLCD(' ');
-            CmdLCD(GOTO_LINE2_POS0  + temp);
-        }
-        while (ColScan() == 0);
-    }
-    str[temp] = '\0'; 
-    temp=my_atoi(str);
-    EnMin=temp;
+        str[temp] = '\0';
+        var=my_atoi(str);
+    }while(var<-1 || var>59);
+    EnMin=var;
 
-    CmdLCD(CLEAR_LCD);
-    StrLCD("EXT ETRY HRS-HH");
-    temp=0;
-    CmdLCD(GOTO_LINE2_POS0+temp);
-    while(temp<2){
-        key=KeyScan();
-        if (key >= '0' && key <= '9'){
-            CharLCD(key);
-            str[temp]=key;
-            temp++;
+    do{
+        CmdLCD(CLEAR_LCD);
+        CmdLCD(GOTO_LINE1_POS0);
+        CharLCD(0);
+        CmdLCD(GOTO_LINE1_POS0+2);
+        StrLCD("SET EXT HOURS-HH");
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
+            key=KeyScan();
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
-        else if ((key == 'C')&&(temp>0)){
-            temp--;
-            str[temp] = '\0';
-            CmdLCD(GOTO_LINE2_POS0 + temp);
-            CharLCD(' ');
-            CmdLCD(GOTO_LINE2_POS0  + temp);
-        }
-        while (ColScan() == 0);
-    }
-    str[temp] = '\0';  
-    ExHr=my_atoi(str);
+        str[temp] = '\0';
+        var=my_atoi(str);
+    }while(var<-1 || var>23);
+    ExHr=var;
 
-    CmdLCD(CLEAR_LCD);
-    StrLCD("ENTR ETRY MIN-MM");
-    temp=0;
-    CmdLCD(GOTO_LINE2_POS0+temp);
-    while(temp<2){
-        key=KeyScan();
-        if (key >= '0' && key <= '9'){
-            CharLCD(key);
-            str[temp]=key;
-            temp++;
+    do{
+        CmdLCD(CLEAR_LCD);
+        CmdLCD(GOTO_LINE1_POS0);
+        CharLCD(0);
+        CmdLCD(GOTO_LINE1_POS0+2);
+        StrLCD("SET EXT MIN-MM");
+        temp=0;
+        CmdLCD(GOTO_LINE2_POS0+temp);
+        while(temp<2){
+            key=KeyScan();
+            if (key >= '0' && key <= '9'){
+                CharLCD(key);
+                str[temp]=key;
+                temp++;
+            }
+            else if ((key == 'C')&&(temp>0)){
+                temp--;
+                str[temp] = '\0';
+                CmdLCD(GOTO_LINE2_POS0 + temp);
+                CharLCD(' ');
+                CmdLCD(GOTO_LINE2_POS0  + temp);
+            }
+            while (ColScan() == 0);
         }
-        else if ((key == 'C')&&(temp>0)){
-            temp--;
-            str[temp] = '\0';
-            CmdLCD(GOTO_LINE2_POS0 + temp);
-            CharLCD(' ');
-            CmdLCD(GOTO_LINE2_POS0  + temp);
-        }
-        while (ColScan() == 0);
-    }
-    str[temp] = '\0'; 
-    ExMin=my_atoi(str);
+        str[temp] = '\0';
+        var=my_atoi(str);
+    }while(var<-1 || var>59);
+    ExMin=var;
 
     CmdLCD(CLEAR_LCD);
     BuildCGRAM((u8*)SuccessLUT,8);
